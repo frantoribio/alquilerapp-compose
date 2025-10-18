@@ -22,7 +22,14 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val habVM: HabitacionesViewModel = viewModel()
                     val loginVM: LoginViewModel = viewModel()
-
+                    val onLogout: () -> Unit = {
+                        loginVM.logout() // 1. Llama al ViewModel para limpiar la sesión
+                        navController.navigate("login") {
+                            // 2. Navega a 'login' y limpia TODA la pila para que no haya vuelta atrás
+                            popUpTo("landing") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
                     NavHost(navController = navController, startDestination = "landing") {
                         composable("landing") {
                             LandingScreen(viewModel = habVM, onLoginClick = { navController.navigate("login") })
@@ -30,16 +37,22 @@ class MainActivity : ComponentActivity() {
                         composable("login") {
                             LoginScreen(viewModel = loginVM) { role ->
                                 when (role.uppercase()) {
-                                    "ADMIN" -> navController.navigate("admin")
-                                    "PROPIETARIO" -> navController.navigate("propietario")
-                                    "ESTUDIANTE" -> navController.navigate("estudiante")
+                                    "ADMIN" -> navController.navigate("admin") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                    "PROPIETARIO" -> navController.navigate("propietario") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                    "ALUMNO" -> navController.navigate("alumno") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
                                     else -> { /* ignore */ }
                                 }
                             }
                         }
-                        composable("admin") { AdminScreen() }
-                        composable("propietario") { PropietarioScreen() }
-                        composable("estudiante") { EstudianteScreen() }
+                        composable("admin") { AdminScreen(onLogout = onLogout) }
+                        composable("propietario") { PropietarioScreen(onLogout = onLogout) }
+                        composable("alumno") { EstudianteScreen(onLogout = onLogout) }
                     }
                 }
             }

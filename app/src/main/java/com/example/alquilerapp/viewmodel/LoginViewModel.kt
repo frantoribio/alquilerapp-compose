@@ -45,4 +45,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             _loading.value = false
         }
     }
+
+    fun logout() {
+        // 1. Limpiar el estado interno de la sesión
+        _role.value = null
+        // 2. Limpiar cualquier token o credencial persistente (SharedPreferences, DataStore, etc.)
+        // Si usas tokens, añade aquí la lógica de limpieza.
+        println("Sesión cerrada y estado reseteado.")
+    }
 }
