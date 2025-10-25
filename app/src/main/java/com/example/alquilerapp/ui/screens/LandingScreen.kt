@@ -76,7 +76,7 @@ fun LandingScreen(viewModel: HabitacionesViewModel, onLoginClick: () -> Unit) {
 
                         Text(hab.direccion, style = MaterialTheme.typography.headlineLarge)
                         Spacer(Modifier.height(4.dp))
-                        Text("Precio: ${'$'}${hab.precioMensual} €/mes")
+                        Text("Precio: ${'€'}${hab.precioMensual} €/mes")
                         //Text("Precio: ${'$'}${hab.precio} €/mes")
                         Spacer(Modifier.height(8.dp))
                         Text(hab.descripcion)

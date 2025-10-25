@@ -3,12 +3,16 @@ package com.example.alquilerapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.alquilerapp.ui.components.BottomBar
 import com.example.alquilerapp.ui.screens.*
 import com.example.alquilerapp.viewmodel.HabitacionesViewModel
 import com.example.alquilerapp.viewmodel.LoginViewModel
@@ -35,24 +39,47 @@ class MainActivity : ComponentActivity() {
                             LandingScreen(viewModel = habVM, onLoginClick = { navController.navigate("login") })
                         }
                         composable("login") {
-                            LoginScreen(viewModel = loginVM) { role ->
-                                when (role.uppercase()) {
-                                    "ADMIN" -> navController.navigate("admin") {
-                                        popUpTo("login") { inclusive = true }
-                                    }
-                                    "PROPIETARIO" -> navController.navigate("propietario") {
-                                        popUpTo("login") { inclusive = true }
-                                    }
-                                    "ALUMNO" -> navController.navigate("alumno") {
-                                        popUpTo("login") { inclusive = true }
-                                    }
-                                    else -> { /* ignore */ }
-                                }
+                            Scaffold(
+                                bottomBar = { BottomBar(navController) }
+                            ) { padding ->
+                                LoginScreen(
+                                    viewModel = loginVM,
+                                    onRoleNavigate = { role ->
+                                        when (role.uppercase()) {
+                                            "ADMIN" -> navController.navigate("admin") {
+                                                popUpTo("login") { inclusive = true }
+                                            }
+                                            "PROPIETARIO" -> navController.navigate("propietario") {
+                                                popUpTo("login") { inclusive = true }
+                                            }
+                                            "ALUMNO" -> navController.navigate("alumno") {
+                                                popUpTo("login") { inclusive = true }
+                                            }
+                                        }
+                                    },
+                                    modifier = Modifier.padding(padding)
+                                )
+
                             }
                         }
-                        composable("admin") { AdminScreen(onLogout = onLogout) }
-                        composable("propietario") { PropietarioScreen(onLogout = onLogout) }
-                        composable("alumno") { EstudianteScreen(onLogout = onLogout) }
+                        composable("admin") { Scaffold(
+                            bottomBar = { BottomBar(navController) }
+                        ) { padding ->
+                            AdminScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
+                        }
+                        }
+                        composable("propietario") {  Scaffold(
+                            bottomBar = { BottomBar(navController) }
+                        ) { padding ->
+                            PropietarioScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
+                        }
+                        }
+                        composable("alumno") { Scaffold(
+                            bottomBar = { BottomBar(navController) }
+                        ) { padding ->
+                            EstudianteScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
+                        }
+                        }
                     }
                 }
             }

@@ -9,10 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.alquilerapp.viewmodel.LoginViewModel
-import kotlinx.coroutines.flow.collectLatest
+
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, onRoleNavigate: (String) -> Unit) {
+fun LoginScreen(viewModel: LoginViewModel,
+                onRoleNavigate: (String) -> Unit,
+                modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val role by viewModel.role.collectAsState()
@@ -23,7 +26,7 @@ fun LoginScreen(viewModel: LoginViewModel, onRoleNavigate: (String) -> Unit) {
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

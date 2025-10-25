@@ -15,7 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AdminScreen(onLogout: () -> Unit) {
+fun AdminScreen(onLogout: () -> Unit, modifier: Modifier
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -33,7 +34,8 @@ fun AdminScreen(onLogout: () -> Unit) {
 }
 
 @Composable
-fun PropietarioScreen(onLogout: () -> Unit) {
+fun PropietarioScreen(onLogout: () -> Unit, modifier: Modifier
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,7 +53,8 @@ fun PropietarioScreen(onLogout: () -> Unit) {
 }
 
 @Composable
-fun EstudianteScreen(onLogout: () -> Unit) {
+fun EstudianteScreen(onLogout: () -> Unit, modifier: Modifier
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
