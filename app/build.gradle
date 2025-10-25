@@ -48,6 +48,8 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3:1.4.0'
     implementation 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.20.0-beta01'
+    implementation 'androidx.compose.runtime:runtime:1.9.4'
+    implementation 'androidx.compose.ui:ui:1.9.4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
 

@@ -57,11 +57,27 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     },
+                                    onNavigateToRegistro = { navController.navigate("registro") },
+
                                     modifier = Modifier.padding(padding)
                                 )
 
                             }
                         }
+                        composable("registro") {
+                            Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
+                                RegistroScreen(
+                                    onRegistroConfirmado = { email, password, rol ->
+                                        // Aquí puedes llamar a tu ViewModel para registrar el usuario
+                                        println("Registrado: $email con rol $rol")
+                                        navController.navigate("login")
+                                    },
+                                    onNavigateBack = { navController.navigate("login") },
+                                    modifier = Modifier.padding(padding)
+                                )
+                            }
+                        }
+
                         composable("admin") { Scaffold(
                             bottomBar = { BottomBar(navController) }
                         ) { padding ->

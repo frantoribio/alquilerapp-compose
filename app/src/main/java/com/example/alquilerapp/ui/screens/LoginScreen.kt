@@ -12,14 +12,17 @@ import com.example.alquilerapp.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel,
-                onRoleNavigate: (String) -> Unit,
-                modifier: Modifier = Modifier
+fun LoginScreen(
+    viewModel: LoginViewModel,
+    onRoleNavigate: (String) -> Unit,
+    onNavigateToRegistro: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val role by viewModel.role.collectAsState()
     val loading by viewModel.loading.collectAsState()
+    var error by remember { mutableStateOf("") }
 
     LaunchedEffect(role) {
         role?.let { onRoleNavigate(it) }
@@ -32,18 +35,55 @@ fun LoginScreen(viewModel: LoginViewModel,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Iniciar Sesión", style = MaterialTheme.typography.labelMedium)
+        Text("Iniciar Sesión", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(16.dp))
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, singleLine = true)
-        Spacer(Modifier.height(8.dp))
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Contraseña") }, visualTransformation = PasswordVisualTransformation(), singleLine = true)
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = {
+                email = it
+                error = ""
+            },
+            label = { Text("Email") },
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = password,
+            onValueChange = {
+                password = it
+                error = ""
+            },
+            label = { Text("Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            singleLine = true
+        )
+
+        if (error.isNotBlank()) {
+            Spacer(Modifier.height(8.dp))
+            Text(error, color = MaterialTheme.colorScheme.error)
+        }
+
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { viewModel.login(email, password) }, enabled = !loading) {
+        Button(
+            onClick = {
+                if (email.isBlank() || password.isBlank()) {
+                    error = "Email y contraseña son obligatorios"
+                } else {
+                    viewModel.login(email, password)
+                }
+            },
+            enabled = !loading
+        ) {
             if (loading) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
             }
             Text("Entrar")
+        }
+
+        Spacer(Modifier.height(16.dp))
+        TextButton(onClick = onNavigateToRegistro) {
+            Text("¿No tienes cuenta? Regístrate")
         }
     }
 }
