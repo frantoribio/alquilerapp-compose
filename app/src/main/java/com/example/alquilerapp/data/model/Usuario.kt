@@ -1,9 +1,11 @@
 package com.example.alquilerapp.data.model
 
-
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
 
+/**
+ * Clase que representa un usuario en la aplicación.
+ */
 data class Usuario(
     val id: UUID? = null,
     val nombre: String? = null,

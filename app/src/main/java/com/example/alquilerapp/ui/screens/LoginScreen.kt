@@ -10,7 +10,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.alquilerapp.viewmodel.LoginViewModel
 
-
+/**
+ * Pantalla de inicio de sesión.
+ */
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,

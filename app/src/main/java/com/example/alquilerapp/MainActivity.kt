@@ -17,6 +17,9 @@ import com.example.alquilerapp.ui.screens.*
 import com.example.alquilerapp.viewmodel.HabitacionesViewModel
 import com.example.alquilerapp.viewmodel.LoginViewModel
 
+/**
+ * MainActivity principal que configura la navegación y el tema de la aplicación.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,15 +70,13 @@ class MainActivity : ComponentActivity() {
                         composable("registro") {
                             Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
                                 RegistroScreen(
-                                    onRegistroConfirmado = { email, password, rol ->
-                                        // Aquí puedes llamar a tu ViewModel para registrar el usuario
-                                        println("Registrado: $email con rol $rol")
-                                        navController.navigate("login")
-                                    },
-                                    onNavigateBack = { navController.navigate("login") },
-                                    modifier = Modifier.padding(padding)
+                                    registroViewModel = loginVM,
+                                    navController = navController,
+                                    modifier = Modifier.padding(padding),
+                                    onNavigateBack = { navController.navigate("login") }
                                 )
                             }
+
                         }
 
                         composable("admin") { Scaffold(

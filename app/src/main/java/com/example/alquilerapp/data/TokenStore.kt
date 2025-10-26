@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore(name = "alquiler_prefs")
 
+/**
+ * Clase para almacenar el token en las preferencias compartidas.
+ */
 class TokenStore(private val context: Context) {
     companion object {
         val TOKEN_KEY = stringPreferencesKey("jwt_token")
@@ -23,6 +26,9 @@ class TokenStore(private val context: Context) {
         prefs[ROLE_KEY]
     }
 
+    /**
+     * Guarda el token en las preferencias compartidas.
+     */
     suspend fun saveToken(token: String, role: String?) {
         context.dataStore.edit { prefs ->
             prefs[TOKEN_KEY] = token
@@ -30,6 +36,9 @@ class TokenStore(private val context: Context) {
         }
     }
 
+    /**
+     * Borra el token de las preferencias compartidas.
+     */
     suspend fun clear() {
         context.dataStore.edit { prefs ->
             prefs.remove(TOKEN_KEY)

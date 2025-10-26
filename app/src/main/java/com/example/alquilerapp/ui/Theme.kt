@@ -15,6 +15,10 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 // 2. Función Composable del Tema
+/**
+ * Composable que define el tema de la aplicación.
+ *
+ */
 @Composable
 fun AlquilerTheme(
     darkTheme: Boolean = true, // Opcional, para permitir cambiar el tema

@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel para la pantalla de Habitaciones
+ */
 class HabitacionesViewModel : ViewModel() {
     private val repo = HabitacionesRepository()
 

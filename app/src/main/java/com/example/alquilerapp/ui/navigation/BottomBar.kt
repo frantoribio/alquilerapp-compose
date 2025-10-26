@@ -2,10 +2,12 @@ package com.example.alquilerapp.ui.components
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.example.alquilerapp.ui.navigation.BottomNavItem
 
+/**
+ * Composable para la barra inferior de navegación.
+ */
 @Composable
 fun BottomBar(navController: NavHostController) {
     NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
@@ -22,4 +24,3 @@ fun BottomBar(navController: NavHostController) {
         )
     }
 }
-

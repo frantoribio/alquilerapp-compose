@@ -1,6 +1,5 @@
 package com.example.alquilerapp.ui.screens
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,24 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.alquilerapp.viewmodel.HabitacionesViewModel
-import com.example.alquilerapp.data.model.Habitacion
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-//import androidx.compose.material3.CardDefaults.cardElevation
-
-// Importa AsyncImage
 import coil.compose.AsyncImage
-// Importa ContentScale para que la imagen se ajuste bien
 import androidx.compose.ui.layout.ContentScale
-
-
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import com.example.alquilerapp.data.model.getEmulatedImageUrl
 
+/**
+ * Composable para la pantalla de inicio de sesión.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LandingScreen(viewModel: HabitacionesViewModel, onLoginClick: () -> Unit) {
@@ -77,7 +71,6 @@ fun LandingScreen(viewModel: HabitacionesViewModel, onLoginClick: () -> Unit) {
                         Text(hab.direccion, style = MaterialTheme.typography.headlineLarge)
                         Spacer(Modifier.height(4.dp))
                         Text("Precio: ${'€'}${hab.precioMensual} €/mes")
-                        //Text("Precio: ${'$'}${hab.precio} €/mes")
                         Spacer(Modifier.height(8.dp))
                         Text(hab.descripcion)
                     }

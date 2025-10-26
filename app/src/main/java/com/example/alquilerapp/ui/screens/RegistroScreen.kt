@@ -19,21 +19,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.alquilerapp.viewmodel.LoginViewModel
+import kotlinx.coroutines.launch
 
+/**
+ * Pantalla de registro de usuario.
+ *
+ * @param registroViewModel El ViewModel para manejar la lógica del registro.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistroScreen(
-    onRegistroConfirmado: (email: String, password: String, rol: String) -> Unit,
-    onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    registroViewModel: LoginViewModel, // ← ViewModel como parámetro
+    navController: NavController,      // ← Para navegar a login
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit
 ) {
+    var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var contraseña by remember { mutableStateOf("") }
     var rolSeleccionado by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf("") }
@@ -51,6 +62,16 @@ fun RegistroScreen(
         Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
+            value = nombre,
+            onValueChange = {
+                nombre = it
+                error = ""
+            },
+            label = { Text("Nombre") },
+            singleLine = true
+        )
+
+        OutlinedTextField(
             value = email,
             onValueChange = {
                 email = it
@@ -60,9 +81,9 @@ fun RegistroScreen(
             singleLine = true
         )
         OutlinedTextField(
-            value = password,
+            value = contraseña,
             onValueChange = {
-                password = it
+                contraseña = it
                 error = ""
             },
             label = { Text("Contraseña") },
@@ -108,17 +129,29 @@ fun RegistroScreen(
         }
 
         Spacer(Modifier.height(16.dp))
+        val scope = rememberCoroutineScope()
+
+
         Button(
             onClick = {
-                if (email.isBlank() || password.isBlank() || rolSeleccionado.isBlank()) {
+                if (nombre.isBlank() || email.isBlank() || contraseña.isBlank() || rolSeleccionado.isBlank()) {
                     error = "Todos los campos son obligatorios"
                 } else {
-                    onRegistroConfirmado(email, password, rolSeleccionado)
+                    scope.launch {
+                        registroViewModel.registrar(nombre, email, contraseña, rolSeleccionado) { success, mensaje ->
+                            if (success) {
+                                navController.navigate("login")
+                            } else {
+                                error = mensaje
+                            }
+                        }
+                    }
                 }
             }
         ) {
             Text("Registrar")
         }
+
 
         Spacer(Modifier.height(16.dp))
         TextButton(onClick = onNavigateBack) {
