@@ -8,10 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.alquilerapp.data.TokenStore
 import com.example.alquilerapp.data.network.ApiServiceBuilder
 import com.example.alquilerapp.repository.UsuarioRepository
 import com.example.alquilerapp.ui.components.BottomBar
@@ -84,7 +86,9 @@ class MainActivity : ComponentActivity() {
 
                         }
                         composable("admin") {
-                            val apiService = ApiServiceBuilder.create()
+                            val context = LocalContext.current
+                            val tokenStore: TokenStore = TokenStore(context)
+                            val apiService = ApiServiceBuilder.create(tokenStore)
                             val usuarioRepository = UsuarioRepository(apiService)
                             val factory = UsuariosViewModelFactory(usuarioRepository)
                             val usuariosVM: UsuariosViewModel = viewModel(factory = factory)
