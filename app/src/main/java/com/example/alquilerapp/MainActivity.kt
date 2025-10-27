@@ -12,10 +12,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.alquilerapp.data.network.ApiServiceBuilder
+import com.example.alquilerapp.repository.UsuarioRepository
 import com.example.alquilerapp.ui.components.BottomBar
 import com.example.alquilerapp.ui.screens.*
 import com.example.alquilerapp.viewmodel.HabitacionesViewModel
 import com.example.alquilerapp.viewmodel.LoginViewModel
+import com.example.alquilerapp.viewmodel.UsuariosViewModel
+import com.example.alquilerapp.viewmodel.UsuariosViewModelFactory
+
 
 /**
  * MainActivity principal que configura la navegación y el tema de la aplicación.
@@ -78,13 +83,46 @@ class MainActivity : ComponentActivity() {
                             }
 
                         }
+                        composable("admin") {
+                            val apiService = ApiServiceBuilder.create()
+                            val usuarioRepository = UsuarioRepository(apiService)
+                            val factory = UsuariosViewModelFactory(usuarioRepository)
+                            val usuariosVM: UsuariosViewModel = viewModel(factory = factory)
 
-                        composable("admin") { Scaffold(
+                            Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
+                                UsuariosScreen(
+                                    viewModel = usuariosVM,
+                                    onCrearUsuario = { navController.navigate("usuarioForm") },
+                                    onEditarUsuario = { usuario -> navController.navigate("usuarioForm?id=${usuario.id}") },
+                                    onLogout = onLogout,
+                                    modifier = Modifier.padding(padding)
+                                )
+                            }
+                        }
+
+                        /*composable("admin") {
+                            Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
+                                val apiService = ApiServiceBuilder.create()
+                                val usuarioRepository = UsuarioRepository(apiService)
+                                val usuariosVM: UsuariosViewModel = viewModel(factory = UsuariosViewModelFactory(
+                                    usuarioRepository
+                                )
+                                )
+                                UsuariosScreen(
+                                    viewModel = usuariosVM,
+                                    onCrearUsuario = { navController.navigate("usuarioForm") },
+                                    onEditarUsuario = { usuario -> navController.navigate("usuarioForm?id=${usuario.id}") },
+                                    onLogout = onLogout,
+                                    modifier = Modifier.padding(padding)
+                                )
+                            }
+                        }*/
+                        /*composable("admin") { Scaffold(
                             bottomBar = { BottomBar(navController) }
                         ) { padding ->
                             AdminScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
                         }
-                        }
+                        }*/
                         composable("propietario") {  Scaffold(
                             bottomBar = { BottomBar(navController) }
                         ) { padding ->
@@ -97,6 +135,19 @@ class MainActivity : ComponentActivity() {
                             EstudianteScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
                         }
                         }
+                        composable("usuarioForm") {
+                            UsuarioFormScreen(
+                                initialData = null, // o desde ViewModel si estás editando
+                                onSubmit = { dto ->
+                                    // lógica para crear o actualizar usuario
+                                    navController.popBackStack()
+                                },
+                                onCancel = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+
                     }
                 }
             }

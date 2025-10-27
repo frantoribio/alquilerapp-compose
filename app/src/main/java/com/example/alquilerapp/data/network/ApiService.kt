@@ -5,10 +5,13 @@ import com.example.alquilerapp.data.model.LoginRequest
 import com.example.alquilerapp.data.model.LoginResponse
 import com.example.alquilerapp.data.model.RegistroRequest
 import com.example.alquilerapp.data.model.RegistroResponse
+import com.example.alquilerapp.data.model.Usuario
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import java.util.UUID
 
 /**
  * Interfaz que define los puntos finales de la API para el alquiler de habitaciones.
@@ -40,4 +43,17 @@ interface ApiService {
      */
     @POST("api/usuarios/registro")
     suspend fun registrarUsuario(@Body request: RegistroRequest): Response<RegistroResponse>
+
+    @GET("api/usuarios")
+    suspend fun listarUsuarios(): List<Usuario>
+
+    @PUT("api/usuarios/{id}")
+    suspend fun crearUsuario(usuario: Usuario): Usuario
+
+    @POST("api/usuarios/{id}")
+    suspend fun actualizarUsuario(id: String, usuario: Usuario): Usuario
+
+    @POST("api/usuarios/{id}")
+    suspend fun eliminarUsuario(id: UUID): Usuario
+
 }

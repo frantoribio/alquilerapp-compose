@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.compose'
     id 'kotlin-kapt' // Opcional, pero bueno tenerlo si usas anotaciones
+
+
 }
 
 
@@ -50,6 +52,7 @@ dependencies {
     implementation 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.20.0-beta01'
     implementation 'androidx.compose.runtime:runtime:1.9.4'
     implementation 'androidx.compose.ui:ui:1.9.4'
+    implementation 'androidx.compose.runtime:runtime-saveable:1.9.4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
 
@@ -76,4 +79,5 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.7.0"
 
     // JWT parse (optional small lib) - we'll avoid external and parse crudely
+
 }
