@@ -1,6 +1,7 @@
 package com.example.alquilerapp.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alquilerapp.data.TokenStore
@@ -46,6 +47,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     }
                     if (!token.isNullOrEmpty()) {
                         store.saveToken(token, role)
+                        Log.d("LoginViewModel", "Token guardado: $token, rol: $role")
                         _role.value = role
                     }
                 }
