@@ -38,8 +38,9 @@ class UsuariosViewModel(private val usuarioRepository: UsuarioRepository) : View
     fun eliminarUsuario(id: UUID) {
         viewModelScope.launch {
             try {
-                cargarUsuarios()
+                //cargarUsuarios()
                 usuarioRepository.eliminarUsuario(id)
+                cargarUsuarios()
 
             } catch (e: Exception) {
                 errorMessage = "Error al eliminar: ${e.message}"

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,9 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.alquilerapp.data.model.Usuario
-import com.example.alquilerapp.data.model.dto.UsuarioDTO
 import com.example.alquilerapp.viewmodel.UsuariosViewModel
-
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.asPaddingValues
 
 @Composable
 fun UsuariosScreen(
@@ -37,7 +37,7 @@ fun UsuariosScreen(
     onCrearUsuario: () -> Unit,
     onEditarUsuario: (Usuario) -> Unit,
     onLogout: () -> Unit,
-    modifier: Any
+    modifier: Modifier = Modifier
 ) {
     val usuarios = viewModel.usuarios
     val loading = viewModel.loading
@@ -61,12 +61,22 @@ fun UsuariosScreen(
             }
         }
 
+        Spacer(Modifier.height(8.dp))
+        Button(onClick = onCrearUsuario) {
+            Text("Crear nuevo usuario")
+        }
+
         if (loading) {
             CircularProgressIndicator()
         } else if (error != null) {
             Text("Error: $error", color = Color.Red)
         } else {
-            LazyColumn {
+            Spacer(Modifier.height(16.dp))
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+            ) {
                 items(usuarios) { usuario ->
                     Card(
                         modifier = Modifier
@@ -90,16 +100,16 @@ fun UsuariosScreen(
                         }
                     }
                 }
-            }
-        }
+                item {
+                    Spacer(
+                        modifier = Modifier.height(
+                            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 64.dp
+                        )
+                    )
+                }
 
-        Spacer(Modifier.height(16.dp))
-        Button(onClick = onCrearUsuario) {
-            Text("Crear nuevo usuario")
-        }
-        Spacer(Modifier.height(16.dp))
-        Button(onClick = onLogout) { // Llamada al callback cuando se presiona el botón
-            Text("Cerrar Sesión")
+            }
+
         }
     }
 }

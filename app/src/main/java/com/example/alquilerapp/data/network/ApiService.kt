@@ -8,9 +8,11 @@ import com.example.alquilerapp.data.model.RegistroResponse
 import com.example.alquilerapp.data.model.Usuario
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import java.util.UUID
 
 /**
@@ -47,13 +49,15 @@ interface ApiService {
     @GET("usuarios")
     suspend fun listarUsuarios(): List<Usuario>
 
-    @PUT("api/usuarios/{id}")
+    @PUT("usuarios/{id}")
     suspend fun crearUsuario(usuario: Usuario): Usuario
 
-    @POST("api/usuarios/{id}")
+    @POST("usuarios/{id}")
     suspend fun actualizarUsuario(id: String, usuario: Usuario): Usuario
 
-    @POST("api/usuarios/{id}")
-    suspend fun eliminarUsuario(id: UUID): Usuario
+    @DELETE("usuarios/{id}")
+    suspend fun eliminarUsuario(@Path("id") id: UUID): Response<Void>
+
+
 
 }
