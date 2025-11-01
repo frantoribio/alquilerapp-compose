@@ -6,6 +6,7 @@ import com.example.alquilerapp.data.model.LoginResponse
 import com.example.alquilerapp.data.model.RegistroRequest
 import com.example.alquilerapp.data.model.RegistroResponse
 import com.example.alquilerapp.data.model.Usuario
+import com.example.alquilerapp.data.model.dto.CrearHabitacionDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -58,6 +59,12 @@ interface ApiService {
     @DELETE("usuarios/{id}")
     suspend fun eliminarUsuario(@Path("id") id: UUID): Response<Void>
 
+    @POST("habitaciones")
+    suspend fun crearHabitacion(
+        @Body nuevaHabitacion: CrearHabitacionDto
+    ): Habitacion
 
+    @GET("habitaciones/propietario")
+    suspend fun getHabitacionesPropietario(): List<Habitacion>
 
 }

@@ -107,9 +107,7 @@ fun UsuariosScreen(
                         )
                     )
                 }
-
             }
-
         }
     }
 }

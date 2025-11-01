@@ -117,7 +117,7 @@ fun RolDropdown(selectedRol: String, onRolSelected: (String) -> Unit) {
                     text = { Text(rol) },
                     onClick = {
                         onRolSelected(rol)
-                        expanded = false
+                        expanded = true
                     }
                 )
             }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -15,11 +16,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.alquilerapp.data.TokenStore
 import com.example.alquilerapp.data.network.ApiServiceBuilder
+import com.example.alquilerapp.repository.AlquilerRepository
 import com.example.alquilerapp.repository.UsuarioRepository
 import com.example.alquilerapp.ui.components.BottomBar
 import com.example.alquilerapp.ui.screens.*
+import com.example.alquilerapp.viewmodel.CreateRoomViewModelFactory
 import com.example.alquilerapp.viewmodel.HabitacionesViewModel
 import com.example.alquilerapp.viewmodel.LoginViewModel
+import com.example.alquilerapp.viewmodel.PropietarioViewModelFactory
 import com.example.alquilerapp.viewmodel.UsuariosViewModel
 import com.example.alquilerapp.viewmodel.UsuariosViewModelFactory
 
@@ -44,6 +48,24 @@ class MainActivity : ComponentActivity() {
                             launchSingleTop = true
                         }
                     }
+                    val context = LocalContext.current
+                    val tokenStore = remember { TokenStore(context) }
+                    val apiService = remember { ApiServiceBuilder.create(tokenStore) }
+
+                    //
+                    val alquilerRepository = remember { AlquilerRepository(apiService) }
+
+                    // ==========================================================
+                    // FABRICAS (FACTORIES)
+                    // ==========================================================
+                    val createRoomFactory = remember {
+                        CreateRoomViewModelFactory(alquilerRepository)
+                    }
+
+                    val propietarioFactory = remember {
+                        PropietarioViewModelFactory(alquilerRepository)
+                    }
+
                     NavHost(navController = navController, startDestination = "landing") {
                         composable("landing") {
                             LandingScreen(viewModel = habVM, onLoginClick = { navController.navigate("login") })
@@ -127,11 +149,33 @@ class MainActivity : ComponentActivity() {
                             AdminScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
                         }
                         }*/
-                        composable("propietario") {  Scaffold(
-                            bottomBar = { BottomBar(navController) }
-                        ) { padding ->
-                            PropietarioScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
+
+                        // En tu MainActivity, dentro del NavHost:
+                        composable("propietario") {
+                            Scaffold(
+                                bottomBar = { BottomBar(navController) }
+                            ) { padding ->
+                                PropietarioScreen(
+                                    viewModel = viewModel(factory = propietarioFactory),
+                                    onLogout = onLogout,
+                                    // ASEGÚRATE DE PASAR LA FUNCIÓN DE NAVEGACIÓN AQUÍ
+                                    onNavigateToCreateRoom = { navController.navigate("create_room_screen") },
+                                    modifier = Modifier.padding(padding)
+                                )
+                            }
                         }
+
+                        composable("create_room_screen") {
+                            CreateRoomScreen(
+                                viewModel = viewModel(factory = createRoomFactory),
+                                onRoomCreated = {
+                                    // Vuelve a la pantalla anterior (PropietarioScreen) al completar
+                                    navController.popBackStack()
+                                },
+                                onBack = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                         composable("alumno") { Scaffold(
                             bottomBar = { BottomBar(navController) }
