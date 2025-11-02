@@ -31,6 +31,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.asPaddingValues
 
+
+/**
+ * Composable que muestra la pantalla de gestión de usuarios por el administrador.
+ */
 @Composable
 fun UsuariosScreen(
     viewModel: UsuariosViewModel,

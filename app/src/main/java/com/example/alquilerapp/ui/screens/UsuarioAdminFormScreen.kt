@@ -11,6 +11,10 @@ import com.example.alquilerapp.data.model.dto.UsuarioDTO
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExperimentalMaterial3Api
+
+/**
+ * función que muestra el formulario para crear o editar un usuario por el administrador
+ */
 @Composable
 fun UsuarioFormScreen(
     initialData: UsuarioDTO? = null,

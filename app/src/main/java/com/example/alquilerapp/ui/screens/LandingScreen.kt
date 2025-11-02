@@ -25,7 +25,7 @@ import androidx.compose.material3.CardDefaults
 import com.example.alquilerapp.data.model.getEmulatedImageUrl
 
 /**
- * Composable para la pantalla de inicio de sesión.
+ * Composable para la pantalla inicial.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

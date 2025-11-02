@@ -18,6 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alquilerapp.viewmodel.CreateRoomViewModel
 
+/**
+ * Composable para la creación de una nueva habitación.
+ *
+ * @param viewModel El ViewModel asociado a esta pantalla.
+ * @param onRoomCreated Función para volver atrás al éxito.
+ * @param onBack Función para volver atrás.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateRoomScreen(

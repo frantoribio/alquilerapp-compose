@@ -177,12 +177,40 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable("alumno") { Scaffold(
-                            bottomBar = { BottomBar(navController) }
-                        ) { padding ->
-                            EstudianteScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
+                        composable("alumno") {
+                            Scaffold(
+                                bottomBar = { BottomBar(navController) }
+                            ) { padding ->
+                                EstudianteScreen(
+                                    viewModel = habVM,
+                                    onLogout = onLogout,
+                                    onReservarClick = { idHabitacion ->
+                                        // Aquí defines qué hacer cuando el estudiante reserva
+                                        // Por ejemplo, navegar a una pantalla de confirmación:
+                                        navController.navigate("reservaConfirmada/$idHabitacion")
+                                    },
+                                    modifier = Modifier.padding(padding)
+
+                                )
+                            }
                         }
+                        /*
+                        composable("reservaConfirmada/{idHabitacion}") { backStackEntry ->
+                            val idHabitacion = backStackEntry.arguments?.getString("idHabitacion")
+                            ReservaConfirmadaScreen(idHabitacion = idHabitacion)
                         }
+
+
+                         */
+                        composable("reservaConfirmada/{idHabitacion}") { backStackEntry ->
+                            val idHabitacion = backStackEntry.arguments?.getString("idHabitacion")
+                            ReservaConfirmadaScreen(
+                                idHabitacion = idHabitacion,
+                                onBack = { navController.popBackStack() }
+                            )
+                        }
+
+
                         composable("usuarioForm") {
                             UsuarioFormScreen(
                                 initialData = null, // o desde ViewModel si estás editando
