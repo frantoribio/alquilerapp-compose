@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.alquilerapp.data.model.Habitacion // Asegúrate de tener la importación correcta
+import com.example.alquilerapp.data.model.Habitacion
 import com.example.alquilerapp.repository.AlquilerRepository
 import kotlinx.coroutines.launch
 
@@ -38,8 +38,6 @@ class PropietarioViewModel(
             isLoading = true
             errorMessage = null
             try {
-                // Suponemos que tienes un endpoint en tu API:
-                // GET /habitaciones/propietario
                 habitaciones = repository.getHabitacionesPropietario()
             } catch (e: Exception) {
                 errorMessage = "Error al cargar las habitaciones: ${e.message ?: "Desconocido"}"

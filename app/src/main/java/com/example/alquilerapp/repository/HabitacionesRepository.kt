@@ -3,7 +3,10 @@ package com.example.alquilerapp.repository
 import com.example.alquilerapp.data.model.LoginRequest
 import com.example.alquilerapp.data.model.LoginResponse
 import com.example.alquilerapp.data.model.Habitacion
+import com.example.alquilerapp.data.model.UploadResponse
+import com.example.alquilerapp.data.network.ApiService
 import com.example.alquilerapp.data.network.RetrofitClient
+import okhttp3.MultipartBody
 import retrofit2.Response
 
 /**
@@ -24,5 +27,10 @@ class HabitacionesRepository {
      */
     suspend fun login(email: String, password: String): Response<LoginResponse> {
         return api.login(LoginRequest(email, password))
+    }
+
+    suspend fun uploadImage(image: MultipartBody.Part): Response<UploadResponse> {
+        return api.uploadImage(image)
+
     }
 }

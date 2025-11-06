@@ -15,7 +15,7 @@ class UsuarioRepository(private val apiService: ApiService) {
         apiService.crearUsuario(usuario)
     }
 
-    suspend fun actualizarUsuario(id: String, usuario: Usuario) {
+    suspend fun actualizarUsuario(id: UUID, usuario: Usuario) {
         apiService.actualizarUsuario(id, usuario)
     }
 

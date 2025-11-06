@@ -1,5 +1,7 @@
 package com.example.alquilerapp.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.alquilerapp.data.model.dto.CrearHabitacionDto
 import com.example.alquilerapp.repository.AlquilerRepository
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.io.File
 
 class CreateRoomViewModel(
     private val repository: AlquilerRepository
@@ -48,7 +54,57 @@ class CreateRoomViewModel(
     fun onAddressChange(newValue: String) { roomAddress = newValue }
     fun onDescriptionChange(newValue: String) { roomDescription = newValue }
     fun onImageUrlChange(newValue: String) { imageUrl = newValue }
+    fun uploadImage(context: Context, imageUri: Uri) {
+        viewModelScope.launch {
+            try {
+                val inputStream = context.contentResolver.openInputStream(imageUri)
+                val tempFile = File.createTempFile("upload", ".jpg", context.cacheDir)
+                inputStream?.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
 
+                val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+                val body = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
+
+                val response = repository.uploadImage(body)
+                if (response.isSuccessful) {
+                    // Manejar éxito
+                } else {
+                    errorMessage = "Error al subir imagen: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                errorMessage = "Excepción: ${e.message}"
+            }
+        }
+    }
+    fun onImageSelected(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val tempFile = File.createTempFile("upload", ".jpg", context.cacheDir)
+                inputStream?.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+                val body = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
+
+                val response = repository.uploadImage(body)
+                if (response.isSuccessful) {
+                    val imageUrl = response.body()?.url ?: ""
+                    onImageUrlChange(imageUrl) // actualiza el campo en el formulario
+                } else {
+                    errorMessage = "Error al subir imagen: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                errorMessage = "Excepción al subir imagen: ${e.message}"
+            }
+        }
+    }
     fun onPriceChange(newValue: String) {
         // Permite la entrada de números y el punto decimal
         if (newValue.all { it.isDigit() || it == '.' }) {

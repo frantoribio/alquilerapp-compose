@@ -5,14 +5,19 @@ import com.example.alquilerapp.data.model.LoginRequest
 import com.example.alquilerapp.data.model.LoginResponse
 import com.example.alquilerapp.data.model.RegistroRequest
 import com.example.alquilerapp.data.model.RegistroResponse
+import com.example.alquilerapp.data.model.UploadResponse
 import com.example.alquilerapp.data.model.Usuario
 import com.example.alquilerapp.data.model.dto.CrearHabitacionDto
+import okhttp3.MultipartBody
+
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import java.util.UUID
 
@@ -54,7 +59,7 @@ interface ApiService {
     suspend fun crearUsuario(usuario: Usuario): Usuario
 
     @POST("usuarios/{id}")
-    suspend fun actualizarUsuario(id: String, usuario: Usuario): Usuario
+    suspend fun actualizarUsuario(id: UUID, usuario: Usuario): Usuario
 
     @DELETE("usuarios/{id}")
     suspend fun eliminarUsuario(@Path("id") id: UUID): Response<Void>
@@ -67,4 +72,7 @@ interface ApiService {
     @GET("habitaciones/propietario")
     suspend fun getHabitacionesPropietario(): List<Habitacion>
 
+    @Multipart
+    @POST("upload")
+    suspend fun uploadImage(@Part image: MultipartBody.Part): Response<UploadResponse>
 }

@@ -26,7 +26,11 @@ fun UsuarioFormScreen(
     var contraseña by rememberSaveable { mutableStateOf("") }
     var rol by rememberSaveable { mutableStateOf(initialData?.rol ?: "PROPIETARIO") }
 
-    val esEdicion = initialData != null
+    //val esEdicion = initialData != null
+    //val esEdicion by derivedStateOf { initialData != null }
+    val esEdicion by remember(initialData) {
+        mutableStateOf(initialData != null)
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
@@ -62,10 +66,12 @@ fun UsuarioFormScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        RolDropdown(rol) {
-            val it = ""
-            rol = it
-        }
+        RolDropdown(
+            selectedRol = rol,
+            onRolSelected = { rolSeleccionado ->
+                rol = rolSeleccionado
+            })
+
 
         Spacer(Modifier.height(16.dp))
 

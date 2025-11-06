@@ -25,6 +25,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
+    private val _loginError = MutableStateFlow<String?>(null)
+    val loginError: StateFlow<String?> = _loginError
+
+
     /**
      * Inicia sesión con las credenciales proporcionadas.
      *
@@ -34,6 +38,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _loading.value = true
+            _loginError.value = null // ← Reinicia el error antes de intentar
+
             try {
                 val resp = repo.login(email, password)
                 if (resp.isSuccessful) {
@@ -49,10 +55,15 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         store.saveToken(token, role)
                         Log.d("LoginViewModel", "Token guardado: $token, rol: $role")
                         _role.value = role
+                    } else {
+                        _loginError.value = "Token inválido o faltante"
                     }
+                } else {
+                    _loginError.value = "Credenciales incorrectas"
                 }
+
             } catch (e: Exception) {
-                // ignore
+                _loginError.value = "Error de conexión: ${e.message}"
             }
             _loading.value = false
         }

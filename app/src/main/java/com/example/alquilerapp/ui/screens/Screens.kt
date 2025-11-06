@@ -121,7 +121,7 @@ fun PropietarioScreen(
 }
 
 // -------------------------------------------------------------
-// Componente auxiliar para mostrar cada habitación
+// Componente auxiliar para mostrar cada habitación del propietario
 // -------------------------------------------------------------
 @SuppressLint("DefaultLocale")
 @Composable
@@ -131,6 +131,20 @@ fun HabitacionListItem(habitacion: com.example.alquilerapp.data.model.Habitacion
         onClick = { /* Navegar a detalles */ }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Imagen
+            habitacion.getEmulatedImageUrl()?.let { imageUrl ->
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = "Imagen de la habitación",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+
             Text(habitacion.titulo, style = MaterialTheme.typography.titleLarge)
             Text("${habitacion.ciudad} - ${habitacion.direccion}")
             Text("Precio: ${String.format("%.2f", habitacion.precioMensual)}€/mes",
@@ -219,7 +233,7 @@ fun EstudianteScreen(
 }
 
 /**
- * función que muestra el panel de confirmación de reserva
+ * función que muestra el panel de confirmación de reserva del estudiante
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

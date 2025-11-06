@@ -21,6 +21,11 @@ class UsuariosViewModel(private val usuarioRepository: UsuarioRepository) : View
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
+    var usuarioSeleccionado by mutableStateOf<Usuario?>(null)
+        private set
+
+
+
     fun cargarUsuarios() {
         viewModelScope.launch {
             loading = true
@@ -59,7 +64,7 @@ class UsuariosViewModel(private val usuarioRepository: UsuarioRepository) : View
         }
     }
 
-    fun actualizarUsuario(id: String, usuario: Usuario) {
+    fun actualizarUsuario(id: UUID, usuario: Usuario) {
         viewModelScope.launch {
             try {
                 usuarioRepository.actualizarUsuario(id, usuario)
@@ -68,5 +73,9 @@ class UsuariosViewModel(private val usuarioRepository: UsuarioRepository) : View
                 errorMessage = "Error al actualizar: ${e.message}"
             }
         }
+    }
+
+    fun seleccionarUsuario(usuario: Usuario) {
+        usuarioSeleccionado = usuario
     }
 }

@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.alquilerapp.data.TokenStore
+import com.example.alquilerapp.data.model.dto.UsuarioDTO
 import com.example.alquilerapp.data.network.ApiServiceBuilder
 import com.example.alquilerapp.repository.AlquilerRepository
 import com.example.alquilerapp.repository.UsuarioRepository
@@ -26,7 +27,6 @@ import com.example.alquilerapp.viewmodel.LoginViewModel
 import com.example.alquilerapp.viewmodel.PropietarioViewModelFactory
 import com.example.alquilerapp.viewmodel.UsuariosViewModel
 import com.example.alquilerapp.viewmodel.UsuariosViewModelFactory
-
 
 /**
  * MainActivity principal que configura la navegación y el tema de la aplicación.
@@ -51,25 +51,22 @@ class MainActivity : ComponentActivity() {
                     val context = LocalContext.current
                     val tokenStore = remember { TokenStore(context) }
                     val apiService = remember { ApiServiceBuilder.create(tokenStore) }
-
-                    //
                     val alquilerRepository = remember { AlquilerRepository(apiService) }
-
-                    // ==========================================================
-                    // FABRICAS (FACTORIES)
-                    // ==========================================================
                     val createRoomFactory = remember {
                         CreateRoomViewModelFactory(alquilerRepository)
                     }
-
                     val propietarioFactory = remember {
                         PropietarioViewModelFactory(alquilerRepository)
                     }
+                    val usuariosVM: UsuariosViewModel = viewModel(factory = UsuariosViewModelFactory(UsuarioRepository(apiService)))
+
 
                     NavHost(navController = navController, startDestination = "landing") {
+
                         composable("landing") {
                             LandingScreen(viewModel = habVM, onLoginClick = { navController.navigate("login") })
                         }
+
                         composable("login") {
                             Scaffold(
                                 bottomBar = { BottomBar(navController) }
@@ -90,12 +87,11 @@ class MainActivity : ComponentActivity() {
                                         }
                                     },
                                     onNavigateToRegistro = { navController.navigate("registro") },
-
                                     modifier = Modifier.padding(padding)
                                 )
-
                             }
                         }
+
                         composable("registro") {
                             Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
                                 RegistroScreen(
@@ -105,15 +101,10 @@ class MainActivity : ComponentActivity() {
                                     onNavigateBack = { navController.navigate("login") }
                                 )
                             }
-
                         }
+
                         composable("admin") {
-                            val context = LocalContext.current
-                            val tokenStore: TokenStore = TokenStore(context)
-                            val apiService = ApiServiceBuilder.create(tokenStore)
-                            val usuarioRepository = UsuarioRepository(apiService)
-                            val factory = UsuariosViewModelFactory(usuarioRepository)
-                            val usuariosVM: UsuariosViewModel = viewModel(factory = factory)
+                            //val usuariosVM: UsuariosViewModel = viewModel(factory = UsuariosViewModelFactory(UsuarioRepository(apiService)))
 
                             Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
                                 UsuariosScreen(
@@ -126,31 +117,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        /*composable("admin") {
-                            Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
-                                val apiService = ApiServiceBuilder.create()
-                                val usuarioRepository = UsuarioRepository(apiService)
-                                val usuariosVM: UsuariosViewModel = viewModel(factory = UsuariosViewModelFactory(
-                                    usuarioRepository
-                                )
-                                )
-                                UsuariosScreen(
-                                    viewModel = usuariosVM,
-                                    onCrearUsuario = { navController.navigate("usuarioForm") },
-                                    onEditarUsuario = { usuario -> navController.navigate("usuarioForm?id=${usuario.id}") },
-                                    onLogout = onLogout,
-                                    modifier = Modifier.padding(padding)
-                                )
-                            }
-                        }*/
-                        /*composable("admin") { Scaffold(
-                            bottomBar = { BottomBar(navController) }
-                        ) { padding ->
-                            AdminScreen(onLogout = onLogout, modifier = Modifier.padding(padding))
-                        }
-                        }*/
-
-                        // En tu MainActivity, dentro del NavHost:
                         composable("propietario") {
                             Scaffold(
                                 bottomBar = { BottomBar(navController) }
@@ -177,6 +143,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
                         composable("alumno") {
                             Scaffold(
                                 bottomBar = { BottomBar(navController) }
@@ -194,14 +161,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        /*
-                        composable("reservaConfirmada/{idHabitacion}") { backStackEntry ->
-                            val idHabitacion = backStackEntry.arguments?.getString("idHabitacion")
-                            ReservaConfirmadaScreen(idHabitacion = idHabitacion)
-                        }
 
-
-                         */
                         composable("reservaConfirmada/{idHabitacion}") { backStackEntry ->
                             val idHabitacion = backStackEntry.arguments?.getString("idHabitacion")
                             ReservaConfirmadaScreen(
@@ -212,8 +172,20 @@ class MainActivity : ComponentActivity() {
 
 
                         composable("usuarioForm") {
+                            /*val context = LocalContext.current
+                            val tokenStore = TokenStore(context)
+                            val apiService = ApiServiceBuilder.create(tokenStore)
+                            val usuarioRepository = UsuarioRepository(apiService)
+                            val factory = UsuariosViewModelFactory(usuarioRepository)
+                            val usuariosVM: UsuariosViewModel = viewModel(factory = factory)*/
+
+
+
                             UsuarioFormScreen(
+
                                 initialData = null, // o desde ViewModel si estás editando
+                                //initialData = usuariosVM.usuarioSeleccionado as UsuarioDTO?,
+
                                 onSubmit = { dto ->
                                     // lógica para crear o actualizar usuario
                                     navController.popBackStack()
@@ -223,7 +195,6 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-
                     }
                 }
             }

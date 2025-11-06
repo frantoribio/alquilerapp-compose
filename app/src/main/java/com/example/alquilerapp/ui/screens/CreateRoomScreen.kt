@@ -17,6 +17,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alquilerapp.viewmodel.CreateRoomViewModel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
 /**
  * Composable para la creación de una nueva habitación.
@@ -33,6 +35,14 @@ fun CreateRoomScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            viewModel.onImageUrlChange(it.toString())
+        }
+    }
+
     val isSaving = viewModel.isSaving
 
     // Observar el estado de éxito
@@ -143,6 +153,13 @@ fun CreateRoomScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
+            Button(
+                onClick = { imagePickerLauncher.launch("image/*") },
+                enabled = !isSaving,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Seleccionar imagen desde el dispositivo")
+            }
 
             // Botón de Guardar
             Button(

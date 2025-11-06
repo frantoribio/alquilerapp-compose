@@ -30,6 +30,11 @@ import com.example.alquilerapp.viewmodel.UsuariosViewModel
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.material3.AlertDialog
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 
 /**
@@ -46,6 +51,9 @@ fun UsuariosScreen(
     val usuarios = viewModel.usuarios
     val loading = viewModel.loading
     val error = viewModel.errorMessage
+
+    var showDialog by remember { mutableStateOf(false) }
+    var usuarioAEliminar by remember { mutableStateOf<Usuario?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.cargarUsuarios()
@@ -93,11 +101,19 @@ fun UsuariosScreen(
                             Text("Email: ${usuario.email}")
                             Text("Rol: ${usuario.rol}")
                             Row {
-                                Button(onClick = { viewModel.eliminarUsuario(usuario.id!!) }) {
+                                Button(onClick = {
+                                    usuarioAEliminar = usuario
+                                    showDialog = true
+                                    //viewModel.eliminarUsuario(usuario.id!!)
+                                }) {
                                     Text("Eliminar")
                                 }
                                 Spacer(Modifier.width(8.dp))
-                                Button(onClick = { onEditarUsuario(usuario) }) {
+                                Button(onClick = {
+                                    //viewModel.actualizarUsuario(usuario.id!!, usuario)
+                                    viewModel.seleccionarUsuario(usuario)
+                                    onEditarUsuario(usuario)
+                                }) {
                                     Text("Editar")
                                 }
                             }
@@ -112,6 +128,26 @@ fun UsuariosScreen(
                     )
                 }
             }
+        }
+        if (showDialog && usuarioAEliminar != null) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Confirmar eliminación") },
+                text = { Text("¿Estás seguro de que deseas eliminar al usuario ${usuarioAEliminar!!.nombre}?") },
+                confirmButton = {
+                    Button(onClick = {
+                        viewModel.eliminarUsuario(usuarioAEliminar!!.id!!)
+                        showDialog = false
+                    }) {
+                        Text("Sí, eliminar")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
         }
     }
 }
