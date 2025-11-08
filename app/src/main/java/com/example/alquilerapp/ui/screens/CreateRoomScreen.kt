@@ -39,7 +39,7 @@ fun CreateRoomScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
-            viewModel.onImageUrlChange(it.toString())
+            viewModel.onImageSelected(context, uri)
         }
     }
 
@@ -163,7 +163,7 @@ fun CreateRoomScreen(
 
             // Botón de Guardar
             Button(
-                onClick = viewModel::createRoom,
+                onClick = { viewModel.createRoom(context) },
                 enabled = !isSaving && isFormValid, // Condición de guardado combinada
                 modifier = Modifier.fillMaxWidth()
             ) {

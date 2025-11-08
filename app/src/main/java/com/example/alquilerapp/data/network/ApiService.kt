@@ -75,4 +75,14 @@ interface ApiService {
     @Multipart
     @POST("upload")
     suspend fun uploadImage(@Part image: MultipartBody.Part): Response<UploadResponse>
+
+    @Multipart
+    @POST("imagenes")
+    suspend fun subirImagen(
+        @Part image: MultipartBody.Part,
+        @Part userId: MultipartBody.Part
+    ): Response<UploadResponse>
+
+
 }
+

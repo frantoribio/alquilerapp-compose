@@ -1,19 +1,28 @@
 package com.example.alquilerapp.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.alquilerapp.data.TokenStore
 import com.example.alquilerapp.data.model.dto.CrearHabitacionDto
 import com.example.alquilerapp.repository.AlquilerRepository
+import com.example.alquilerapp.util.JwtUtils
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.File
+import kotlin.let
 
 class CreateRoomViewModel(
     private val repository: AlquilerRepository
@@ -46,6 +55,7 @@ class CreateRoomViewModel(
         private set
 
 
+
     // ==========================================================
     // 3. HANDLERS DE EVENTOS (Para actualizar el estado)
     // ==========================================================
@@ -54,6 +64,7 @@ class CreateRoomViewModel(
     fun onAddressChange(newValue: String) { roomAddress = newValue }
     fun onDescriptionChange(newValue: String) { roomDescription = newValue }
     fun onImageUrlChange(newValue: String) { imageUrl = newValue }
+    /*
     fun uploadImage(context: Context, imageUri: Uri) {
         viewModelScope.launch {
             try {
@@ -68,7 +79,7 @@ class CreateRoomViewModel(
                 val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
                 val body = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
 
-                val response = repository.uploadImage(body)
+                val response = repository.uploadImage(body, userIdPart)
                 if (response.isSuccessful) {
                     // Manejar éxito
                 } else {
@@ -79,9 +90,20 @@ class CreateRoomViewModel(
             }
         }
     }
+    */
+
+     */
     fun onImageSelected(context: Context, uri: Uri) {
         viewModelScope.launch {
             try {
+                val token = TokenStore(context).getToken()
+                val userId = getUserIdFromToken(token)
+
+                if (userId == null) {
+                    errorMessage = "No se pudo obtener el ID del usuario"
+                    return@launch
+                }
+
                 val inputStream = context.contentResolver.openInputStream(uri)
                 val tempFile = File.createTempFile("upload", ".jpg", context.cacheDir)
                 inputStream?.use { input ->
@@ -91,12 +113,13 @@ class CreateRoomViewModel(
                 }
 
                 val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
-                val body = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
+                val imagePart = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
+                val userIdPart = MultipartBody.Part.createFormData("userId", userId)
 
-                val response = repository.uploadImage(body)
+                val response = repository.uploadImage(imagePart, userIdPart)
                 if (response.isSuccessful) {
                     val imageUrl = response.body()?.url ?: ""
-                    onImageUrlChange(imageUrl) // actualiza el campo en el formulario
+                    onImageUrlChange(imageUrl)
                 } else {
                     errorMessage = "Error al subir imagen: ${response.code()}"
                 }
@@ -115,34 +138,40 @@ class CreateRoomViewModel(
     // ==========================================================
     // 4. LÓGICA DE CREACIÓN
     // ==========================================================
-    fun createRoom() {
-        // ... (Tu código existente)
+
+    fun createRoom(context: Context) {
         val priceValue = roomPrice.toDoubleOrNull()
 
-        // --- Validación ---
         if (roomTitle.isBlank() || roomCity.isBlank() || roomAddress.isBlank() || priceValue == null) {
             errorMessage = "El título, la ciudad, la dirección y el precio son obligatorios."
             return
         }
 
-        val imagesList = if (imageUrl.isNotBlank()) listOf(imageUrl) else emptyList()
-
-        // 1. Crear el DTO
-        val roomDto = CrearHabitacionDto(
-            titulo = roomTitle,
-            ciudad = roomCity,
-            direccion = roomAddress,
-            precioMensual = priceValue,
-            descripcion = roomDescription,
-            imagenesUrl = imagesList
-        )
-
-        // 2. Llamada a la API
         viewModelScope.launch {
             isSaving = true
             errorMessage = null
             try {
-                // Llama al repositorio con el DTO simplificado
+                val token = TokenStore(context).getToken() // ← ahora dentro de la corrutina
+                val userId = getUserIdFromToken(token)
+
+                if (userId == null) {
+                    errorMessage = "No se pudo obtener el ID del usuario"
+                    isSaving = false
+                    return@launch
+                }
+
+                val imagesList = if (imageUrl.isNotBlank()) listOf(imageUrl) else emptyList()
+
+                val roomDto = CrearHabitacionDto(
+                    titulo = roomTitle,
+                    ciudad = roomCity,
+                    direccion = roomAddress,
+                    precioMensual = priceValue,
+                    descripcion = roomDescription,
+                    imagenesUrl = imagesList,
+                    propietarioId = userId
+                )
+
                 repository.crearHabitacion(roomDto)
                 saveSuccess = true
             } catch (e: Exception) {
@@ -152,4 +181,10 @@ class CreateRoomViewModel(
             }
         }
     }
+
+
+    fun getUserIdFromToken(token: String?): String? {
+        return token?.let { JwtUtils.extractClaim(it, "sub") } // o "id", según cómo lo codifique tu backend
+    }
+
 }

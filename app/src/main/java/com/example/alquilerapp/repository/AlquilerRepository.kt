@@ -18,9 +18,13 @@ class AlquilerRepository(private val apiService: ApiService) {
         return apiService.getHabitacionesPropietario()
     }
 
-    suspend fun uploadImage(image: MultipartBody.Part): Response<UploadResponse> {
-        return apiService.uploadImage(image)
+
+
+    suspend fun uploadImage(image: MultipartBody.Part, userId: MultipartBody.Part): Response<UploadResponse> {
+        return apiService.subirImagen(image, userId)
     }
+
+
 
 }
 

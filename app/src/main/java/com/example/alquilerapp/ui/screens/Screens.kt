@@ -44,6 +44,8 @@ import com.example.alquilerapp.viewmodel.HabitacionesViewModel
 import com.example.alquilerapp.viewmodel.PropietarioViewModel
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Divider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
 
 /**
  * función que muestra el panel de propietario
@@ -53,12 +55,21 @@ import androidx.compose.material3.Divider
 fun PropietarioScreen(
     onLogout: () -> Unit,
     onNavigateToCreateRoom: () -> Unit,
+    shouldRefresh: Boolean,
     viewModel: PropietarioViewModel = viewModel(), // Usa la inyección con factory en el MainActivity
     modifier: Modifier
 ) {
     val state = viewModel.habitaciones
     val isLoading = viewModel.isLoading
     val errorMessage = viewModel.errorMessage
+
+    val refreshTrigger by rememberUpdatedState(shouldRefresh)
+    LaunchedEffect(refreshTrigger) {
+        if (refreshTrigger) {
+            viewModel.cargarHabitacionesPropietario()
+        }
+    }
+
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -69,10 +80,8 @@ fun PropietarioScreen(
                     IconButton(onClick = onLogout) {
                         Icon(Icons.Filled.Logout, contentDescription = "Cerrar sesión")
                     }
-
-
-                })
-
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onNavigateToCreateRoom) {

@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,6 +63,10 @@ class MainActivity : ComponentActivity() {
                         PropietarioViewModelFactory(alquilerRepository)
                     }
                     val usuariosVM: UsuariosViewModel = viewModel(factory = UsuariosViewModelFactory(UsuarioRepository(apiService)))
+
+                    var shouldRefresh by remember { mutableStateOf(false) }
+
+
 
 
                     NavHost(navController = navController, startDestination = "landing") {
@@ -126,7 +134,8 @@ class MainActivity : ComponentActivity() {
                                     onLogout = onLogout,
                                     // ASEGÚRATE DE PASAR LA FUNCIÓN DE NAVEGACIÓN AQUÍ
                                     onNavigateToCreateRoom = { navController.navigate("create_room_screen") },
-                                    modifier = Modifier.padding(padding)
+                                    modifier = Modifier.padding(padding),
+                                    shouldRefresh = shouldRefresh
                                 )
                             }
                         }
@@ -136,6 +145,9 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel(factory = createRoomFactory),
                                 onRoomCreated = {
                                     // Vuelve a la pantalla anterior (PropietarioScreen) al completar
+                                    navController.previousBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set("shouldRefresh", true)
                                     navController.popBackStack()
                                 },
                                 onBack = {

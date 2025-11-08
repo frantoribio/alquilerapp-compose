@@ -15,5 +15,6 @@ data class CrearHabitacionDto(
     @SerialName("precioMensual")
     val precioMensual: Double,
     val descripcion: String,
-    val imagenesUrl: List<String>
+    val imagenesUrl: List<String>,
+    val propietarioId: String
 )
