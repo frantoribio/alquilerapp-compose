@@ -12,7 +12,6 @@ object RetrofitClient {
 
     private const val BASE = "http://10.0.2.2:8080/"
 
-    // We'll create a Retrofit without a fixed Authorization header.
     val instance: ApiService by lazy {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)

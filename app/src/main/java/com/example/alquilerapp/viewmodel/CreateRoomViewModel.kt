@@ -1,19 +1,14 @@
 package com.example.alquilerapp.viewmodel
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alquilerapp.data.TokenStore
+import com.example.alquilerapp.data.model.Habitacion
 import com.example.alquilerapp.data.model.dto.CrearHabitacionDto
 import com.example.alquilerapp.repository.AlquilerRepository
 import com.example.alquilerapp.util.JwtUtils
@@ -22,6 +17,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.File
+import java.util.UUID
 import kotlin.let
 
 class CreateRoomViewModel(
@@ -54,7 +50,45 @@ class CreateRoomViewModel(
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
+    var habitacionActual: Habitacion? = null
+        private set
 
+    fun cargarHabitacionPorId(id: UUID) {
+        viewModelScope.launch {
+            try {
+                habitacionActual = obtenerHabitacionPorId(id)
+            } catch (e: Exception) {
+                // Manejo de error
+            }
+        }
+    }
+
+    private fun obtenerHabitacionPorId(id: UUID): Habitacion? {
+        return habitacionActual
+    }
+
+    fun actualizarHabitacion(habitacion: Habitacion) {
+        viewModelScope.launch {
+            try {
+                actualizarHabitacion(habitacion)
+            } catch (e: Exception) {
+                // Manejo de error
+            }
+        }
+    }
+
+    fun eliminarHabitacion(id: UUID) {
+        viewModelScope.launch {
+            try {
+                repository.eliminarHabitacion(id)
+            } catch (e: Exception) {
+                // Manejo de error
+            }
+        }
+    }
+
+
+    private fun AlquilerRepository.eliminarHabitacion(id: UUID) {}
 
     // ==========================================================
     // 3. HANDLERS DE EVENTOS (Para actualizar el estado)

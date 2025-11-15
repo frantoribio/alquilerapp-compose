@@ -17,6 +17,19 @@ class HabitacionesViewModel : ViewModel() {
     private val _habitaciones = MutableStateFlow<List<Habitacion>>(emptyList())
     val habitaciones: StateFlow<List<Habitacion>> = _habitaciones
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
+    fun editarHabitacion(habitacion: Habitacion) {
+        viewModelScope.launch {
+            try {
+                repo.editarHabitacion(habitacion.id, habitacion)
+                loadHabitaciones()
+            } catch (e: Exception) {
+                _errorMessage.value = "Error al editar la habitación: ${e.message ?: "Desconocido"}"
+            }
+        }
+    }
     fun loadHabitaciones(token: String? = null) {
         viewModelScope.launch {
             try {

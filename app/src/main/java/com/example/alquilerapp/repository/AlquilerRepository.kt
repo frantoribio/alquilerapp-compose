@@ -17,20 +17,15 @@ class AlquilerRepository(private val apiService: ApiService) {
         return apiService.getHabitacionesPropietario()
     }
 
-
-
     suspend fun uploadImage(image: MultipartBody.Part, userId: MultipartBody.Part): Response<UploadResponse> {
         return apiService.subirImagen(image, userId)
     }
 
-    /*suspend fun eliminarHabitacion(id: String): Response<Void> {
-        return apiService.eliminarHabitacion(id)
-    }*/
+    suspend fun eliminarHabitacion(id: String) {
+        apiService.eliminarHabitacion(id)
+    }
 
-   /* suspend fun editarHabitacion(id: Habitacion): Habitacion {
-        return apiService.editarHabitacion(id)
-    }*/
-
+    suspend fun editarHabitacion(id: String, habitacion: Habitacion) {
+        apiService.editarHabitacion(id, habitacion)
+    }
 }
-
-

@@ -47,7 +47,7 @@ class PropietarioViewModel(
         }
     }
 
-    /*fun eliminarHabitacion(habitacionId: String) {
+    fun eliminarHabitacion(habitacionId: String) {
         viewModelScope.launch {
 
             try {
@@ -56,21 +56,17 @@ class PropietarioViewModel(
             } catch (e: Exception) {
                 errorMessage = "Error al eliminar la habitación: ${e.message ?: "Desconocido"}"
             }
-
         }
-    }*/
+    }
 
-    /*fun editarHabitacion(habitacionId: String) {
+    fun editarHabitacion(habitacionId: String, habitacion: Habitacion) {
         viewModelScope.launch {
             try {
-                repository.editarHabitacion(habitacionId)
+                repository.editarHabitacion(habitacionId, habitacion)
                 habitaciones = repository.getHabitacionesPropietario()
             } catch (e: Exception) {
                 errorMessage = "Error al editar la habitación: ${e.message ?: "Desconocido"}"
             }
-
         }
-
-    }*/
-
+    }
 }

@@ -33,4 +33,8 @@ class HabitacionesRepository {
         return api.uploadImage(image)
 
     }
+
+    suspend fun editarHabitacion(id: String, habitacion: Habitacion) {
+        api.editarHabitacion(id, habitacion)
+    }
 }

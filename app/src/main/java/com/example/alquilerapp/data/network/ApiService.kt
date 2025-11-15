@@ -34,7 +34,6 @@ interface ApiService {
      */
     @GET("api/habitaciones")
     suspend fun getHabitaciones(): Response<List<Habitacion>>
-    //suspend fun getHabitaciones(@Header("Authorization") auth: String? = null): Response<List<Habitacion>>
 
     /**
      * Inicia sesión con las credenciales proporcionadas.
@@ -64,11 +63,6 @@ interface ApiService {
     @DELETE("usuarios/{id}")
     suspend fun eliminarUsuario(@Path("id") id: UUID): Response<Void>
 
-    @DELETE("habitaciones/{id}")
-    suspend fun eliminarHabitacion(@Path("id") id: UUID): Response<Void>
-
-
-
     @POST("habitaciones")
     suspend fun crearHabitacion(
         @Body nuevaHabitacion: CrearHabitacionDto
@@ -88,6 +82,11 @@ interface ApiService {
         @Part userId: MultipartBody.Part
     ): Response<UploadResponse>
 
+    @DELETE("habitaciones/{id}")
+    suspend fun eliminarHabitacion(@Path("id") id: String)
+
+    @PUT("habitaciones/{id}")
+    suspend fun editarHabitacion(@Path("id") id: String, @Body habitacion: Habitacion)
 
 }
 

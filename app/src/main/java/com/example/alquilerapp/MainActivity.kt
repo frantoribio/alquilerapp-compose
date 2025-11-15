@@ -26,9 +26,11 @@ import com.example.alquilerapp.ui.screens.*
 import com.example.alquilerapp.viewmodel.CreateRoomViewModelFactory
 import com.example.alquilerapp.viewmodel.HabitacionesViewModel
 import com.example.alquilerapp.viewmodel.LoginViewModel
+import com.example.alquilerapp.viewmodel.PropietarioViewModel
 import com.example.alquilerapp.viewmodel.PropietarioViewModelFactory
 import com.example.alquilerapp.viewmodel.UsuariosViewModel
 import com.example.alquilerapp.viewmodel.UsuariosViewModelFactory
+import java.util.UUID
 
 /**
  * MainActivity principal que configura la navegación y el tema de la aplicación.
@@ -138,11 +140,20 @@ class MainActivity : ComponentActivity() {
                             Scaffold(
                                 bottomBar = { BottomBar(navController) }
                             ) { padding ->
+                                val propietarioVM: PropietarioViewModel = viewModel(factory = propietarioFactory)
+
                                 PropietarioScreen(
                                     viewModel = viewModel(factory = propietarioFactory),
                                     onLogout = onLogout,
                                     // ASEGÚRATE DE PASAR LA FUNCIÓN DE NAVEGACIÓN AQUÍ
                                     onNavigateToCreateRoom = { navController.navigate("create_room_screen") },
+                                    onEditRoom = { habitacion ->
+                                        navController.navigate("editar_habitacion/${habitacion.id}")
+                                    },
+                                    onDeleteRoom = { habitacion ->
+                                        propietarioVM.eliminarHabitacion(habitacion.id)
+                                    },
+
                                     modifier = Modifier.padding(padding),
                                     //shouldRefresh = shouldRefresh
                                     navController = navController
@@ -224,6 +235,17 @@ class MainActivity : ComponentActivity() {
 
                         composable("reservas") {
                             //ReservasScreen(/* si tienes ViewModel o props, agrégalos aquí */)
+                        }
+
+                        composable("editar_habitacion/{id}") { backStackEntry ->
+                            val id = backStackEntry.arguments?.getString("id")?.let { UUID.fromString(it) }
+                            if (id != null) {
+                                EditarHabitacionScreen(
+                                    habitacionId = id as UUID,
+                                    viewModel = viewModel(factory = createRoomFactory),
+                                    onBack = { navController.popBackStack() }
+                                )
+                            }
                         }
                     }
                 }

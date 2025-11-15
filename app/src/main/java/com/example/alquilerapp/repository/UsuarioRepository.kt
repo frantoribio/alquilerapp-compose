@@ -4,7 +4,6 @@ import com.example.alquilerapp.data.model.Usuario
 import com.example.alquilerapp.data.network.ApiService
 import java.util.UUID
 
-
 class UsuarioRepository(private val apiService: ApiService) {
 
     suspend fun obtenerUsuarios(): List<Usuario> {
