@@ -8,7 +8,6 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 
 
-
 class AlquilerRepository(private val apiService: ApiService) {
     suspend fun crearHabitacion(dto: CrearHabitacionDto): Habitacion {
         return apiService.crearHabitacion(dto)
@@ -24,7 +23,13 @@ class AlquilerRepository(private val apiService: ApiService) {
         return apiService.subirImagen(image, userId)
     }
 
+    /*suspend fun eliminarHabitacion(id: String): Response<Void> {
+        return apiService.eliminarHabitacion(id)
+    }*/
 
+   /* suspend fun editarHabitacion(id: Habitacion): Habitacion {
+        return apiService.editarHabitacion(id)
+    }*/
 
 }
 

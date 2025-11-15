@@ -46,4 +46,31 @@ class PropietarioViewModel(
             }
         }
     }
+
+    /*fun eliminarHabitacion(habitacionId: String) {
+        viewModelScope.launch {
+
+            try {
+                repository.eliminarHabitacion(habitacionId)
+                habitaciones = repository.getHabitacionesPropietario()
+            } catch (e: Exception) {
+                errorMessage = "Error al eliminar la habitación: ${e.message ?: "Desconocido"}"
+            }
+
+        }
+    }*/
+
+    /*fun editarHabitacion(habitacionId: String) {
+        viewModelScope.launch {
+            try {
+                repository.editarHabitacion(habitacionId)
+                habitaciones = repository.getHabitacionesPropietario()
+            } catch (e: Exception) {
+                errorMessage = "Error al editar la habitación: ${e.message ?: "Desconocido"}"
+            }
+
+        }
+
+    }*/
+
 }

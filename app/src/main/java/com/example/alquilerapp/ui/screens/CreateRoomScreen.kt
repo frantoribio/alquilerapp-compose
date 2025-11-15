@@ -91,6 +91,7 @@ fun CreateRoomScreen(
                 value = viewModel.roomTitle,
                 onValueChange = viewModel::onTitleChange,
                 label = { Text("Título del Anuncio (*)") },
+                keyboardOptions = KeyboardOptions.Default,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isSaving
             )
@@ -101,6 +102,7 @@ fun CreateRoomScreen(
                 value = viewModel.roomCity,
                 onValueChange = viewModel::onCityChange,
                 label = { Text("Ciudad (*)") },
+                keyboardOptions = KeyboardOptions.Default,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isSaving
             )
@@ -111,6 +113,7 @@ fun CreateRoomScreen(
                 value = viewModel.roomAddress,
                 onValueChange = viewModel::onAddressChange,
                 label = { Text("Dirección de la Propiedad (*)") },
+                keyboardOptions = KeyboardOptions.Default,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isSaving
             )
@@ -134,6 +137,7 @@ fun CreateRoomScreen(
                 value = viewModel.roomDescription,
                 onValueChange = viewModel::onDescriptionChange,
                 label = { Text("Descripción detallada") },
+                keyboardOptions = KeyboardOptions.Default,
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = false,
                 minLines = 3,
@@ -143,7 +147,7 @@ fun CreateRoomScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // 6. Campo URL de Imagen
-            OutlinedTextField(
+           /* OutlinedTextField(
                 value = viewModel.imageUrl,
                 onValueChange = viewModel::onImageUrlChange,
                 label = { Text("URL de la imagen principal") },
@@ -151,7 +155,7 @@ fun CreateRoomScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isSaving
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))*/
 
             Button(
                 onClick = { imagePickerLauncher.launch("image/*") },

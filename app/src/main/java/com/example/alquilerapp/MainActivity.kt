@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,7 +18,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.alquilerapp.data.TokenStore
-import com.example.alquilerapp.data.model.dto.UsuarioDTO
 import com.example.alquilerapp.data.network.ApiServiceBuilder
 import com.example.alquilerapp.repository.AlquilerRepository
 import com.example.alquilerapp.repository.UsuarioRepository
@@ -83,7 +81,7 @@ class MainActivity : ComponentActivity() {
                                     viewModel = loginVM,
                                     onRoleNavigate = { role ->
                                         when (role.uppercase()) {
-                                            "ADMIN" -> navController.navigate("admin") {
+                                            "ADMIN" -> navController.navigate("administrador") {
                                                 popUpTo("login") { inclusive = true }
                                             }
                                             "PROPIETARIO" -> navController.navigate("propietario") {
@@ -115,13 +113,24 @@ class MainActivity : ComponentActivity() {
                             //val usuariosVM: UsuariosViewModel = viewModel(factory = UsuariosViewModelFactory(UsuarioRepository(apiService)))
 
                             Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
-                                UsuariosScreen(
+                                UsuariosAdminScreen(
                                     viewModel = usuariosVM,
                                     onCrearUsuario = { navController.navigate("usuarioForm") },
                                     onEditarUsuario = { usuario -> navController.navigate("usuarioForm?id=${usuario.id}") },
                                     onLogout = onLogout,
+                                    onBack = { navController.navigate("administrador") },
                                     modifier = Modifier.padding(padding)
                                 )
+                            }
+                        }
+                        composable("administrador") {
+                            Scaffold(bottomBar = { BottomBar(navController) }) { padding ->
+                                AdminScreen(
+                                    navController = navController,
+                                    onLogout = onLogout,
+                                    modifier = Modifier.padding(padding)
+                                )
+
                             }
                         }
 
@@ -135,7 +144,9 @@ class MainActivity : ComponentActivity() {
                                     // ASEGÚRATE DE PASAR LA FUNCIÓN DE NAVEGACIÓN AQUÍ
                                     onNavigateToCreateRoom = { navController.navigate("create_room_screen") },
                                     modifier = Modifier.padding(padding),
-                                    shouldRefresh = shouldRefresh
+                                    //shouldRefresh = shouldRefresh
+                                    navController = navController
+
                                 )
                             }
                         }
@@ -206,6 +217,13 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 }
                             )
+                        }
+                        composable("habitaciones") {
+                            //HabitacionesScreen(viewModel = habVM)
+                        }
+
+                        composable("reservas") {
+                            //ReservasScreen(/* si tienes ViewModel o props, agrégalos aquí */)
                         }
                     }
                 }

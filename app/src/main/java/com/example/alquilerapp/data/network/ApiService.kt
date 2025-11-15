@@ -64,6 +64,11 @@ interface ApiService {
     @DELETE("usuarios/{id}")
     suspend fun eliminarUsuario(@Path("id") id: UUID): Response<Void>
 
+    @DELETE("habitaciones/{id}")
+    suspend fun eliminarHabitacion(@Path("id") id: UUID): Response<Void>
+
+
+
     @POST("habitaciones")
     suspend fun crearHabitacion(
         @Body nuevaHabitacion: CrearHabitacionDto
