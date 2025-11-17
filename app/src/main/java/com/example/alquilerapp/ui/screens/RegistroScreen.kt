@@ -57,6 +57,10 @@ fun RegistroScreen(
     var error by remember { mutableStateOf("") }
     val roles = listOf("PROPIETARIO", "ALUMNO")
 
+    fun esEmailValido(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -151,6 +155,8 @@ fun RegistroScreen(
             onClick = {
                 if (nombre.isBlank() || email.isBlank() || contraseña.isBlank() || rolSeleccionado.isBlank()) {
                     error = "Todos los campos son obligatorios"
+                } else if (!esEmailValido(email)) {
+                    error = "El email introducido no es válido"
                 } else {
                     scope.launch {
                         registroViewModel.registrar(nombre, email, contraseña, rolSeleccionado) { success, mensaje ->

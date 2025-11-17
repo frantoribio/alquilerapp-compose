@@ -16,7 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
  * función que muestra el formulario para crear o editar un usuario por el administrador
  */
 @Composable
-fun UsuarioFormScreen(
+fun UsuarioAdminFormScreen(
     initialData: UsuarioDTO? = null,
     onSubmit: (UsuarioDTO) -> Unit,
     onCancel: () -> Unit

@@ -215,7 +215,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-                            UsuarioFormScreen(
+                            UsuarioAdminFormScreen(
 
                                 initialData = null, // o desde ViewModel si estás editando
                                 //initialData = usuariosVM.usuarioSeleccionado as UsuarioDTO?,
@@ -229,6 +229,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
                         composable("habitaciones") {
                             //HabitacionesScreen(viewModel = habVM)
                         }
